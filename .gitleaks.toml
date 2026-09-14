@@ -1,0 +1,12 @@
+# gitleaks configuration: default rules plus project allowlists.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documented placeholders and test fixtures"
+paths = [
+  '''testdata/models/mock-.*\.json''',
+]
+regexes = [
+  '''emb_test_[A-Za-z0-9]+''',
+]
