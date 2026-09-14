@@ -1,0 +1,67 @@
+# --- secrets: never commit ---------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.jks
+*.asc
+*.gpg
+id_rsa*
+id_ed25519*
+secrets/
+secrets.*
+credentials.*
+cli.key
+node.secret
+*.token
+# allow deliberately committed test fixtures (self-signed, throwaway only)
+!testdata/**/*.pem
+!testdata/**/*.crt
+!testdata/**/*.key
+
+# --- private planning material (design notes, ADRs, tickets) — never committed
+/docs-private/
+
+# --- local Ember state -------------------------------------------------------
+/.ember/
+*.db
+*.db-wal
+*.db-shm
+hardware.json
+calibration.json
+diagnostic.zip
+config.local.yaml
+
+# --- build output --------------------------------------------------------------
+/bin/
+/dist/
+*.exe
+*.test
+*.out
+coverage.*
+*.bundle
+
+# --- web UI (built in CI, embedded at build time) ------------------------------
+/web/dist/
+/web/node_modules/
+
+# --- models and engines are never committed ------------------------------------
+*.gguf
+*.safetensors
+/testdata/models/*
+!/testdata/models/mock-*.json
+!/testdata/models/README.md
+/testdata/engines/
+
+# --- editors / OS ----------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+.claude/settings.local.json
