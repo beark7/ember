@@ -53,3 +53,36 @@ jobs:
         run: go test ./... -race -count=1
       - name: Version flag
         run: go run ./cmd/emberd --version
+
+  capture-scripts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        if: runner.os == 'Linux'
+        run: shellcheck scripts/capture-hardware.sh
+      - name: Run capture-hardware.sh
+        if: runner.os != 'Windows'
+        run: |
+          scripts/capture-hardware.sh ci-${{ runner.os }} --out "$RUNNER_TEMP/cap" --notes "github runner"
+          test -f "$RUNNER_TEMP/cap/meta.json"
+          test -f "$RUNNER_TEMP/cap/uname.txt"
+          ls "$RUNNER_TEMP/cap" | wc -l | xargs test 8 -le
+      - name: PSScriptAnalyzer
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          $r = Invoke-ScriptAnalyzer -Path scripts/capture-hardware.ps1 -Severity Error
+          if ($r) { $r | Format-Table | Out-String | Write-Host; exit 1 }
+      - name: Run capture-hardware.ps1
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          scripts/capture-hardware.ps1 -Machine ci-windows -Out "$env:RUNNER_TEMP\cap" -Notes "github runner"
+          if (-not (Test-Path "$env:RUNNER_TEMP\cap\meta.json")) { throw "meta.json missing" }
+          if (-not (Test-Path "$env:RUNNER_TEMP\cap\processor.json")) { throw "processor.json missing" }
