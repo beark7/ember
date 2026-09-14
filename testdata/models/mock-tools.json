@@ -1,0 +1,7 @@
+{
+  "reply": "echo",
+  "tokens_per_sec": 2000,
+  "tool_calls": {
+    "get_weather": {"city": "Rome", "unit": "celsius"}
+  }
+}

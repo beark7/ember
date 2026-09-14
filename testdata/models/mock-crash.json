@@ -1,0 +1,5 @@
+{
+  "reply": "lorem",
+  "tokens_per_sec": 2000,
+  "crash_after_tokens": 5
+}
